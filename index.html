@@ -158,45 +158,54 @@
     </main>
 
     <script>
-        function switchPage(pageId) {
-            const sections = document.querySelectorAll('.page-section');
-            sections.forEach(section => section.classList.remove('active'));
-            
-            const navLinks = document.querySelectorAll('.nav-item');
-            navLinks.forEach(link => link.classList.remove('active'));
-            
-            const targetSection = document.getElementById('page-' + pageId);
-            if (targetSection) {
-                targetSection.classList.add('active');
+        
+    function switchPage(pageId) {
+        const sections = document.querySelectorAll('.page-section');
+        sections.forEach(section => section.classList.remove('active'));
+        
+        const navLinks = document.querySelectorAll('.nav-item');
+        navLinks.forEach(link => link.classList.remove('active'));
+        
+        const targetSection = document.getElementById('page-' + pageId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+        
+        navLinks.forEach(link => {
+            if (link.textContent.toLowerCase().replace(' ', '-') === pageId) {
+                link.classList.add('active');
             }
-            
-            navLinks.forEach(link => {
-                if (link.textContent.toLowerCase().replace(' ', '-') === pageId) {
-                    link.classList.add('active');
-                }
-            });
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        });
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-        function handleOrderSubmit(event) {
-            event.preventDefault(); 
-            
-            const name = document.getElementById('customer-name').value;
-            const type = document.getElementById('laundry-type').value;
-            const weight = document.getElementById('weight').value;
-            
-            const summaryBox = document.getElementById('summary-details');
-            summaryBox.innerHTML = `
-                <p><strong>Nama:</strong> ${name}</p>
-                <p><strong>Layanan:</strong> ${type}</p>
-                <p><strong>Estimasi Beban:</strong> ${weight} kg</p>
-            `;
-            
-            switchPage('success-order');
-            
-            document.getElementById('order-form').reset();
-        }
+    function handleOrderSubmit(event) {
+        event.preventDefault(); 
+        
+        // 1. Ambil semua value dari form, termasuk notes
+        const name = document.getElementById('customer-name').value;
+        const type = document.getElementById('laundry-type').value;
+        const weight = document.getElementById('weight').value;
+        const notes = document.getElementById('notes').value; 
+        
+        // 2. Jika notes kosong, beri nilai default "-" agar tampilan tetap rapi
+        const displayNotes = notes.trim() !== "" ? notes : "-";
+
+        // 3. Tambahkan baris catatan ke dalam HTML summary
+        const summaryBox = document.getElementById('summary-details');
+        summaryBox.innerHTML = `
+            <p><strong>Nama:</strong> ${name}</p>
+            <p><strong>Layanan:</strong> ${type}</p>
+            <p><strong>Estimasi Beban:</strong> ${weight} kg</p>
+            <p><strong>Catatan Tambahan:</strong> ${displayNotes}</p>
+        `;
+        
+        switchPage('success-order');
+        
+        document.getElementById('order-form').reset();
+    }
+
     </script>
 </body>
 </html>
